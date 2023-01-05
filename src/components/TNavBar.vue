@@ -5,22 +5,6 @@
         <span v-if="$route.path === link.path">{{ link.label }}</span>
         <router-link v-else :to="link.path">{{ link.label }}</router-link>
       </li>
-      <!-- <li>
-        <span v-if="$route.path === '/'">Home</span>
-        <router-link v-else to="/">Home</router-link>
-      </li>
-      <li>
-        <span v-if="$route.path === '/projects'">Projects</span>
-        <router-link v-else to="/projects">Projects</router-link>
-      </li>
-      <li>
-        <span v-if="$route.path === '/tasks'">Tasks</span>
-        <router-link v-else to="/tasks">Tasks</router-link>
-      </li>
-      <li>
-        <span v-if="$route.path === '/persons'">Persons</span>
-        <router-link v-else to="/persons">Persons</router-link>
-      </li> -->
     </ul>
   </nav>
 </template>
@@ -33,17 +17,7 @@ export default {
       type: Array,
       required: true
     }
-  },
-  // data () {
-  //   return {
-  //     links: [
-  //       { path: '/', label: 'Home' },
-  //       { path: '/projects', label: 'Projects' },
-  //       { path: '/tasks', label: 'Tasks' },
-  //       { path: '/persons', label: 'Persons' }
-  //     ]
-  //   }
-  // }
+  }
 }
 
 </script>
