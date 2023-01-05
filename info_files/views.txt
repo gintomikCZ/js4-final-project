@@ -1,0 +1,67 @@
+nav-bar
+  - home - welcome page //
+  - projects - projects list //
+  - tasks - tasks list //
+  - persons - persons list
+
+1) Welcome page
+  - bez dat
+  - dashboard data - celkový počet projektů (splněných)/ úkolů (splněných)
+
+2) Projects Page
+  - seznam projektů - všech // project, number of tasks (total/completed)
+    - řadit podle:  all tasks completed / nejstarší datum nesplněného úkolu
+    - stylově odlišit splněné a nesplněné projekty
+    - položky klikací - po kliknutí rozbalíme roletku (accordeon) s prvními 5 záznamy a linkem na detail
+      - accordeon první řádek - detail / edit / delete ?/ add task
+  - link na přidání nového projektu - přesměruje na add form
+
+3) Project Detail Page
+  - název projektu
+  - seznam úkolů daného projektu
+    - řadit podle: completed / podle data
+  - delete button - zobrazíme jen když projekt je mazatelný
+  - edit button - přesměruje na edit form
+  - možnost přidat nový úkol - button - přesměruje na task form (add)
+
+4) Tasks Page
+  - seznam všech úkolů
+    - řadit podle: completed / datum
+    - project / task / datum / priority / počet lidí
+    - položky klikací - po kliknutí (accordeon) se rozbalí seznam persons
+      - accordeon první řádek - detail / edit / delete ?/ add person
+
+5) Task Detail Page
+  - název tasku, projektu
+  - seznam lidí, kteří řeší daný task
+    - položky seznamu mazací - po hoveru se zobrazí mazací ikonka
+  - edit button - přesměruje na task form (edit)
+  - delete button - zobrazit jen když task je mazatelný (nemá žádné přiřazené lidi)
+  - možnost přidat nového člověka k úkolu - select (options všech dosud nepřiřazených lidí)
+
+6) Persons Page
+  - seznam všech lidí
+    - řadit podle 'last + first'
+    - full name / position / number of tasks (completed/not completed)
+    - položky klikací  po kliknutí (accordeon) se rozbalí seznam tasks
+      - první řádek - detail / edit / delete ?/ add task
+    - možnost přidat nového člověka - add button
+
+7) Person Detail Page
+  - základní údaje - full name, position
+  - edit button
+  - delete button ??
+  - možnost přidat task
+
+_________________
+FORMS
+
+8) Project Form Page (add/edit)
+
+9) Task Form Page (add/edit)
+
+10) Person Form Page (add/edit)
+
+
+
+

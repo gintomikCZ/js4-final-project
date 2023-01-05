@@ -1,0 +1,66 @@
+TODO APLIKACE
+  Tasks
+  Projects
+  Persons
+
+  každý Task náleží k jednomu projektu
+  Project může obsahovat více Tasků
+  Na jednom Tasku může pracovat více Persons
+  Jeden Person může pracovat na více Tasks
+
+  Projects => Tasks .... 1 : N
+  Persons => Positions ... 1 : N
+  Tasks => Persons .... M : N
+
+
+Tabulky
+  js4projects
+    id: integer (primary key)
+    project: varchar 255
+
+  [
+    { id: 1, project: zahrada }
+  ]
+
+  js4tasks
+    id: integer (primary key)
+    task: varchar 255
+    projectid: integer (foreign key - js4projects)
+    completed: integer (hodnoty 1 nebo 0)
+    date: date ('2022-12-29')
+    priority: integer (hodnoty 1, 2, 3)
+  [
+    { id: 1, task: posekat trávu, projectid: 1, completed: 0, date: 2023-03-20, priority: 1 }
+    { id: 2, task: ostříhat stromky, projectid: 1, completed: 0, date: 2023-03-31, priority: 1 }
+  ]
+
+  js4persons
+    id: integer (primary key)
+    first: varchar 255
+    last: varchar 255
+    positionid: integer (foreign key - js4positions)
+
+  [
+    { id: 1, first: Karel, last: Houska, positionid: 3 },
+    { id: 2, first: Jenda, last: Benda, positionid: 2 },
+  ]
+
+  js4positions
+    id: integer (primary key)
+    position: varchar 255
+
+  js4personstasks
+    id: integer (primary key)
+    taskid: integer (foreign key js4tasks)
+    personid: integer (foreign key js4persons)
+
+  [
+    { id: 1, taskid: 1, personid: 1},
+    { id: 2, taskid: 1, personid: 2},
+    { id: 3, taskid: 2, personid: 1}
+  ]
+
+  _________________
+
+
+
