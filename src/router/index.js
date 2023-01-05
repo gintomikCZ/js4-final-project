@@ -36,6 +36,36 @@ const routes = [
     name: 'personDetail',
     component: () => import('../views/PersonDetailPage.vue')
   },
+  {
+    path: '/project-form',
+    name: 'projectFormAdd',
+    component: () => import('../views/ProjectFormPage.vue')
+  },
+  {
+    path: '/project-form/:id',
+    name: 'projectFormEdit',
+    component: () => import('../views/ProjectFormPage.vue')
+  },
+  {
+    path: '/task-form',
+    name: 'taskFormAdd',
+    component: () => import('../views/TaskFormPage.vue')
+  },
+  {
+    path: '/task-form/:id',
+    name: 'taskFormEdit',
+    component: () => import('../views/TaskFormPage.vue')
+  },
+  {
+    path: '/person-form',
+    name: 'personFormAdd',
+    component: () => import('../views/PersonFormPage.vue')
+  },
+  {
+    path: '/person-form/:id',
+    name: 'personFormEdit',
+    component: () => import('../views/PersonFormPage.vue')
+  }
 ]
 
 const router = createRouter({
