@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <nav class="nav">
     <ul>
       <li v-for="link in links" :key="link.label">
         <span v-if="$route.path === link.path">{{ link.label }}</span>
@@ -22,30 +22,31 @@ export default {
 
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 @import '../styles/variables.styl'
 
-nav
+nav.nav
   background: $primary
   height: 50px
   display: flex
   align-items: center
-ul
+nav.nav > ul
   margin: 0
   list-style-type: none
   display: flex
+  flex-direction: row
   justify-content: space-between
   flex-grow: 1
   padding: 0 1rem
-a
+nav.nav a
   color: $secondary
   text-decoration: none
   cursor: pointer
   display: block
   transition: transform .5s ease
-a:hover
-  transform: scale(1.2)
-li span
+  &:hover
+    transform: scale(1.2)
+nav.nav > ul li span
   color: $tertiary
 
 

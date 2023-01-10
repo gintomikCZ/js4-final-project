@@ -1,16 +1,40 @@
 <template>
-  <button>click me</button>
+  <button
+    @click="onClick"
+    :class="{ 'btn-small': smallSize }"
+    :type="btnType"
+  >{{ label }}</button>
 </template>
 
 <script>
 
 export default {
-  name: 'TButton'
+  name: 'TButton',
+  props: {
+    smallSize: {
+      type: Boolean,
+      default: false
+    },
+    label: {
+      type: String,
+      required: true
+    },
+    btnType: {
+      type: String,
+      default: 'submit'
+    }
+  },
+  methods: {
+    onClick () {
+      this.$emit('clicked')
+    }
+  }
 }
+
 
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 @import '../styles/variables.styl'
 button
   background: $primary
@@ -24,4 +48,11 @@ button
   &:hover
     color: $tertiary
 
+.btn-small
+  font-size: 1rem
+  background: transparent
+  color: darken($tertiary, 50)
+  &:hover
+    background: lighten($secondary, 20)
+    color: $primary
 </style>

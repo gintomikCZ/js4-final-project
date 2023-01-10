@@ -1,12 +1,12 @@
 <template>
   <t-nav-bar :links="navbarLinks" />
   <router-view/>
-  <t-button />
+
 </template>
 
 <script>
 import TNavBar from './components/TNavBar.vue'
-import TButton from './components/TButton.vue'
+
 export default {
   name: 'App',
   data () {
@@ -19,7 +19,7 @@ export default {
       ]
     }
   },
-  components: { TNavBar, TButton }
+  components: { TNavBar }
 }
 
 </script>
