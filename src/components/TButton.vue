@@ -51,8 +51,29 @@ button
 .btn-small
   font-size: 1rem
   background: transparent
-  color: darken($tertiary, 50)
+  color: $primary
   &:hover
     background: lighten($secondary, 20)
-    color: $primary
+    color: darken($tertiary, 20)
+    box-shadow: $btn-shadow
+// @import '../styles/variables.styl'
+// button
+//   background: $primary
+//   color: $secondary
+//   padding: .4em .8em
+//   transition: all .3s ease
+//   border-radius: $border-radius
+//   font-size: 1.2rem
+//   border: none
+//   cursor: pointer
+//   &:hover
+//     color: $tertiary
+
+// .btn-small
+//   font-size: 1rem
+//   background: transparent
+//   color: darken($tertiary, 50)
+//   &:hover
+//     background: lighten($secondary, 20)
+//     color: $primary
 </style>
