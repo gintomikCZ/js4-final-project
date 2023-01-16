@@ -29,6 +29,8 @@ export default {
 body, html
   margin: 0
   padding: 0
+body
+  padding-bottom: 2rem
 #app
   font-family Avenir, Helvetica, Arial, sans-serif
   text-align center

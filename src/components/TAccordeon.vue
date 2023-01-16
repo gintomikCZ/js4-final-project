@@ -48,9 +48,13 @@ export default {
 .accordeon:not(:last-child)
   margin-bottom: 6px
 .accordeon:first-child .title
-  border-radius: 10px 10px 0px 0px
+  // border-radius: 10px 10px 0px 0px
+  border-top-left-radius: 10px
+  border-top-right-radius: 10px
 .accordeon:last-child .title:not(.content-shown)
-  border-radius: 0 0 10px 10px
+  // border-radius: 0 0 10px 10px
+  border-bottom-left-radius: 10px
+  border-bottom-right-radius: 10px
 .title
   display: flex
   justify-content: space-between
@@ -95,49 +99,3 @@ export default {
   box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.15)
   // padding: 10px 20px
 </style>
-
-<!-- <style lang="stylus" scoped>
-@import '../styles/variables.styl'
-@import '../styles/transitions.styl'
-.accordeon
-  max-width: 500px
-  margin: 0 auto
-.title
-  border: 1px solid #cdcdcd
-  display: flex
-  justify-content: space-between
-  cursor: pointer
-
-// .arrow-down
-//   width: 0
-//   height: 0
-//   border-left: 10px solid transparent
-//   border-right: 10px solid transparent
-//   border-top: 15px solid $primary
-//   transition: transform .3s ease
-
-.arrow-down
-  font-size: 1.4rem
-  font-weight: bold
-  transform: rotate(-90deg)
-  transition: transform .3s ease
-
-.arrow-down-rotated
-  transform: rotate(90deg)
-.title-label
-  padding: $list-items-padding
-  flex-grow: 1
-  text-align: left
-  font-weight: bold
-  display: flex
-  align-items: center
-.title-arrow
-  display: flex
-  justify-content: center
-  align-items: center
-  padding: $list-items-padding
-.content
-  border: 1px solid #cdcdcd
-  border-top: none
-  // padding: 10px 20px
-</style> -->

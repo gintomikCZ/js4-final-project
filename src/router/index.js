@@ -52,6 +52,11 @@ const routes = [
     component: () => import('../views/TaskFormPage.vue')
   },
   {
+    path: '/task-form-project/:projectid',
+    name: 'taskFormAddProject',
+    component: () => import('../views/TaskFormPage.vue')
+  },
+  {
     path: '/task-form/:id',
     name: 'taskFormEdit',
     component: () => import('../views/TaskFormPage.vue')
