@@ -1,22 +1,29 @@
 
 <template>
-  <div v-if="show" class="modal-bg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="modal-title">{{ title }}</div>
-        <div>
-          <t-button label="X" small-size @clicked="onCloseClicked"/>
+  <transition name="modal-1">
+    <div
+      v-if="showBg" class="modal-bg"
+      @transitionend="onBgTransitionEnd"
+    >
+      <transition name="modal-2">
+        <div v-if="showContent" class="modal-content" @transitionend="onContentTransitionEnd">
+          <div class="modal-header">
+            <div class="modal-title">{{ title }}</div>
+            <div>
+              <t-button label="X" small-size @clicked="onCloseClicked"/>
+            </div>
+          </div>
+          <div class="modal-body">
+            <slot></slot>
+          </div>
+          <div class="modal-footer">
+            <t-button :label="okButtonLabel" small-size @clicked="onOkClicked"/>
+            <t-button :label="cancelButtonLabel" small-size @clicked="onCancelClicked"/>
+          </div>
         </div>
-      </div>
-      <div class="modal-body">
-        <slot></slot>
-      </div>
-      <div class="modal-footer">
-        <t-button :label="okButtonLabel" small-size @clicked="onOkClicked"/>
-        <t-button :label="cancelButtonLabel" small-size @clicked="onCancelClicked"/>
-      </div>
+      </transition>
     </div>
-  </div>
+  </transition>
 </template>
 
 
@@ -37,7 +44,21 @@ export default {
       default: 'cancel'
     },
     show: Boolean
-
+  },
+  data () {
+    return {
+      showContent: false,
+      showBg: false
+    }
+  },
+  watch: {
+    show (nv) {
+      if (nv) {
+        this.showBg = true
+      } else {
+        this.showContent = false
+      }
+    }
   },
   methods: {
     onCloseClicked () {
@@ -48,6 +69,18 @@ export default {
     },
     onCancelClicked () {
       this.$emit('cancel-clicked')
+    },
+    onBgTransitionEnd (e) {
+      e.stopPropagation()
+      if (this.show) {
+        this.showContent = true
+      }
+    },
+    onContentTransitionEnd (e) {
+      e.stopPropagation()
+      if (!this.show) {
+        this.showBg = false
+      }
     }
   },
   components: { TButton }
@@ -94,4 +127,22 @@ export default {
 .modal-title
   font-size: 1.2rem
   font-weight: bold
+
+.modal-1-enter-from, .modal-1-leave-to
+  // transform: translateY(-100px)
+  opacity: 0
+.modal-1-enter-to, .modal-1-leave-from
+  // transform: translateY(0)
+  opacity: 1
+.modal-1-enter-active, .modal-1-leave-active
+  // transition: transform .5s ease
+  // transform-origin: top
+  transition: opacity 0.3s ease
+.modal-2-enter-from, .modal-2-leave-to
+  transform: translateY(-200px)
+.modal-2-enter-to, .modal-2-leave-from
+  transform: translateY(0)
+.modal-2-enter-active, .modal-2-leave-active
+  transition: transform 0.3s ease
+  transform-origin: top
 </style>
