@@ -21,7 +21,7 @@ export default {
     },
     btnType: {
       type: String,
-      default: 'submit'
+      default: 'button'
     }
   },
   methods: {

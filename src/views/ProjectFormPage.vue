@@ -1,7 +1,11 @@
 <template>
   <div>
     <h1>{{ title }}</h1>
-    <t-form :settings="settings" v-if="!loading" />
+    <t-form
+      :settings="settings"
+      v-if="!loading"
+      @submited="onSubmited"
+    />
     <t-loading v-else />
   </div>
 
@@ -19,6 +23,10 @@ export default {
         project: {
           autofocus: true,
           label: 'project',
+          valRules: [
+            { rule: 'required', message: 'The project name is required.' },
+            { rule: 'minLength', par: 3, message: 'The min length is 3 chars.' }
+          ]
         }
       },
       loading: true
@@ -44,6 +52,17 @@ export default {
 
       this.loading = false
     })
+  },
+  methods: {
+    onSubmited (data) {
+      const promise = this.mode === 'add'
+        ? db.post('js4projects', data)
+        : db.put('js4projects', Object.assign({ id: this.$route.params.id}, data))
+      promise.then(() => {
+        this.$router.push('/projects')
+      })
+    }
+
   },
   components: { TForm, TLoading }
 }

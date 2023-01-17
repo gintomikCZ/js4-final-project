@@ -1,35 +1,110 @@
 <template>
-  <form>
+  <form @submit="onSubmit">
+    <t-modal
+      :show="showErrorModal"
+      title="error"
+      :cancel-button-display="false"
+      okButtonLabel="OK"
+      @close-me="showErrorModal=false"
+      @ok-clicked="showErrorModal=false"
+    >
+      <div>The form is not valid.</div>
+    </t-modal>
     <template v-for="control in controls" :key="control">
-
-      <!-- <div>
-        <label :for="control">{{ settings[control].label }}</label>
-        <input :id="control" />
-      </div> -->
       <t-input
         :control="control"
         :settings="settings[control]"
+        :error="formData[control].error"
+        :error-message="formData[control].errorMessage"
+        @changed="onChanged"
+        @focused="onFocused"
+        @blured="onBlured"
       />
-
+      <t-button label="submit" btn-type="submit" />
     </template>
   </form>
 </template>
 
 <script>
 
+import validator from '../../helpers/validator.js'
 import TInput from './TInput.vue'
+import TButton from '../TButton.vue'
+import TModal from '../TModal.vue'
 
 export default {
   name: 'TForm',
   props: {
     settings: Object
   },
-  computed: {
-    controls () {
-      return Object.keys(this.settings) // ['project']
+  data () {
+    return {
+      formData: {}, // formData.project: { value: '', error: false, errorMessage: '' }
+      showErrorModal: false
     }
   },
-  components: { TInput }
+  computed: {
+    controls () {
+      return Object.keys(this.settings)
+    }
+  },
+  created () {
+    this.controls.forEach(control => {
+      this.formData[control] = {
+        value: this.settings[control].initialValue || '',
+        error: false,
+        errorMessage: ''
+      }
+    })
+  },
+  methods: {
+    onChanged (payload) {
+      this.formData[payload.control].value = payload.value
+    },
+    onBlured (control) {
+      this.validate(control)
+    },
+    onFocused (control) {
+      this.formData[control].error = false
+      this.formData[control].errorMessage = ''
+    },
+    validate (control) {
+      let error = false
+      this.settings[control].valRules.forEach((valRule) => { // { rule: 'required', par: 2, message: 'sdfsd' }
+        if (!error) {
+          const result = validator[valRule.rule](this.formData[control].value, valRule.par)
+          if (!result) {
+            error = true
+            this.formData[control].error = true
+            this.formData[control].errorMessage = valRule.message
+          }
+        }
+      })
+      if (!error) {
+        this.formData[control].error = false
+        this.formData[control].errorMessage = ''
+      }
+    },
+    onSubmit (e) {
+      e.preventDefault()
+      this.controls.forEach(control => {
+        this.validate(control)
+      })
+      if (this.controls.every(control => !this.formData[control].error)) {
+        // a) všechny kontrolky jsou validní
+        // vyemitovat formData do rodičovské komponenty
+        // { control: value, control2: value2 }
+        const data = {}
+        this.controls.forEach(control => {
+          data[control] = this.formData[control].value
+        })
+        this.$emit('submited', data)
+      } else {
+        this.showErrorModal = true
+      }
+    }
+  },
+  components: { TInput, TButton, TModal }
 
 
 }
@@ -42,5 +117,8 @@ form
   width: 60%
   max-width: 400px
   margin: 0 auto
+  border-radius: 10px
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2)
+  padding-bottom: 2rem
 
 </style>

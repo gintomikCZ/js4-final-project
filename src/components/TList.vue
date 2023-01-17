@@ -5,8 +5,7 @@
       <div class="icon" v-if="displayIcons">
         <t-icon
           v-if="item.icon"
-          :icon-name="item.icon"
-          color="green"
+          :icon="item.icon"
         />
       </div>
       <div class="content">
@@ -22,7 +21,7 @@ import TIcon from './TIcon.vue'
 export default {
   name: 'TList',
   props: {
-    items: Array, // { id: 23, header: 'tzsdutuf', subtitle: 'sdhjkfhsdk', icon: 'check'}
+    items: Array, // { id: 23, header: 'tzsdutuf', subtitle: 'sdhjkfhsdk', icon: { icon: 'check', color: 'green' }}
     displayIcons: {
       type: Boolean,
       default: false

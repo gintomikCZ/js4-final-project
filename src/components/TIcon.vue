@@ -1,15 +1,16 @@
 <template>
   <svg
-    :fill="color"
+    :fill="icon.color"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     :width="width + 'px'"
     :height="height + 'px'"
-    :viewBox="icon.viewBox"
+    :viewBox="iconFound.viewBox"
     xml:space="preserve">
     <g>
-      <path :d="icon.path" />
+      <path :d="iconFound.path" />
+      <path v-if="iconFound.paths" :d="iconFound.paths" />
     </g>
   </svg>
 </template>
@@ -18,7 +19,7 @@ import { getIcon } from '@/icons/icons.js';
 
 
 export default {
-  name: 'IconCheck',
+  name: 'TIcon',
   props: {
     width: {
       type: Number,
@@ -28,18 +29,14 @@ export default {
       type: Number,
       default: 16
     },
-    color: {
-      type: String,
-      default: '#000000'
-    },
-    iconName: {
-      type: String,
+    icon: {
+      type: Object,
       required: true
     }
   },
   computed: {
-    icon () {
-      return getIcon(this.iconName)
+    iconFound () {
+      return getIcon(this.icon.icon)
     }
   }
 }

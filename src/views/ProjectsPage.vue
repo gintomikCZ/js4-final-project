@@ -2,6 +2,7 @@
   <div>
 
     <h1>projects</h1>
+    <img class="project-img" width="150" src="../assets/img/project-manager-icon.png" alt="ikona" />
     <t-modal
       :show="showDeleteModal"
       title="confirm delete"
@@ -50,7 +51,7 @@
 <script>
 // import { getProjects, getTasks } from '../data/data.js'
 import db from '../helpers/db.js'
-import { formatDate } from '../helpers/dateFunctions.js'
+import { formatDate, isPast } from '../helpers/dateFunctions.js'
 import TAccordeon from '../components/TAccordeon.vue'
 import TList from '../components/TList.vue'
 import TButton from '../components/TButton.vue'
@@ -71,14 +72,21 @@ export default {
   computed: {
     projectsToDisplay () { // [ {id: 1, project: 'zahrada', tasks: [{task1 ....}]}]
       return this.projects.map(project => {
+
         return Object.assign(
           {
             tasks: this.tasks.filter(task => project.id === task.projectid).map(item => {
+              let icon = ''
+              if (item.completed) {
+                icon = { icon: 'check', color: 'green' }
+              } else if (isPast(item.date)) {
+                icon = { icon: 'warning', color: 'red' }
+              }
               return {
                 id: item.id,
                 header: item.task,
                 subtitle: formatDate(item.date),
-                icon: item.completed ? 'check' : '',
+                icon,
                 completed: item.completed
               }
             })
@@ -135,4 +143,6 @@ export default {
   border-bottom: 1px solid #efefef
 .large-btn-container
   padding-bottom: 2rem
+img
+  margin-bottom: 2rem
 </style>

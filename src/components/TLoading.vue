@@ -1,10 +1,12 @@
 <template>
 
-  <div> ... loading ... </div>
+  <div>
+    <img src="../assets/img/Loading_icon.gif" alt="loading"  />
+  </div>
 
 </template>
 
-<script> 
+<script>
 
 export default {
   name: 'TLoading'
@@ -12,3 +14,7 @@ export default {
 
 
 </script>
+
+<style lang="stylus">
+
+</style>

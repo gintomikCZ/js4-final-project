@@ -2,11 +2,9 @@
 <template>
   <transition name="modal-1">
     <div
-      v-if="showBg" class="modal-bg"
-      @transitionend="onBgTransitionEnd"
+      v-if="show" class="modal-bg"
     >
-      <transition name="modal-2">
-        <div v-if="showContent" class="modal-content" @transitionend="onContentTransitionEnd">
+        <div class="modal-content">
           <div class="modal-header">
             <div class="modal-title">{{ title }}</div>
             <div>
@@ -17,11 +15,10 @@
             <slot></slot>
           </div>
           <div class="modal-footer">
-            <t-button :label="okButtonLabel" small-size @clicked="onOkClicked"/>
-            <t-button :label="cancelButtonLabel" small-size @clicked="onCancelClicked"/>
+            <t-button v-if="okButtonDisplay" :label="okButtonLabel" small-size @clicked="onOkClicked"/>
+            <t-button v-if="cancelButtonDisplay" :label="cancelButtonLabel" small-size @clicked="onCancelClicked"/>
           </div>
         </div>
-      </transition>
     </div>
   </transition>
 </template>
@@ -43,21 +40,18 @@ export default {
       type: String,
       default: 'cancel'
     },
+    okButtonDisplay: {
+      type: Boolean,
+      default: true
+    },
+    cancelButtonDisplay: {
+      type: Boolean,
+      default: true
+    },
     show: Boolean
   },
   data () {
     return {
-      showContent: false,
-      showBg: false
-    }
-  },
-  watch: {
-    show (nv) {
-      if (nv) {
-        this.showBg = true
-      } else {
-        this.showContent = false
-      }
     }
   },
   methods: {
@@ -70,18 +64,6 @@ export default {
     onCancelClicked () {
       this.$emit('cancel-clicked')
     },
-    onBgTransitionEnd (e) {
-      e.stopPropagation()
-      if (this.show) {
-        this.showContent = true
-      }
-    },
-    onContentTransitionEnd (e) {
-      e.stopPropagation()
-      if (!this.show) {
-        this.showBg = false
-      }
-    }
   },
   components: { TButton }
 }
