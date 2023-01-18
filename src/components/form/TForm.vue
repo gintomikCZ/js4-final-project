@@ -20,8 +20,8 @@
         @focused="onFocused"
         @blured="onBlured"
       />
-      <t-button label="submit" btn-type="submit" />
     </template>
+    <t-button class="submit-button" label="submit" btn-type="submit" />
   </form>
 </template>
 
@@ -70,16 +70,18 @@ export default {
     },
     validate (control) {
       let error = false
-      this.settings[control].valRules.forEach((valRule) => { // { rule: 'required', par: 2, message: 'sdfsd' }
-        if (!error) {
-          const result = validator[valRule.rule](this.formData[control].value, valRule.par)
-          if (!result) {
-            error = true
-            this.formData[control].error = true
-            this.formData[control].errorMessage = valRule.message
+      if (this.settings[control].valRules) {
+        this.settings[control].valRules.forEach((valRule) => { // { rule: 'required', par: 2, message: 'sdfsd' }
+          if (!error) {
+            const result = validator[valRule.rule](this.formData[control].value, valRule.par)
+            if (!result) {
+              error = true
+              this.formData[control].error = true
+              this.formData[control].errorMessage = valRule.message
+            }
           }
-        }
-      })
+        })
+      }
       if (!error) {
         this.formData[control].error = false
         this.formData[control].errorMessage = ''
@@ -121,4 +123,6 @@ form
   box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2)
   padding-bottom: 2rem
 
+  .submit-button
+    margin-top: 2rem
 </style>

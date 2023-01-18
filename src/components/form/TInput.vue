@@ -1,12 +1,34 @@
 <template>
   <div class="form-control">
     <label :for="control">{{ settings.label }}</label>
+
+    <select
+      v-if="settings.type === 'select'"
+      :id="control"
+      :autofocus="settings.autofocus || false"
+      :autocomplete="settings.autocomplete || 'off'"
+      :class="{'is-invalid': error }"
+      ref="myInput"
+      @change="onChanged"
+      @focus="onFocus"
+      @blur="onBlur"
+    >
+      <option
+        v-for="option in settings.options"
+        :key="option.value"
+        :value="option.value"
+      >{{ option.label  }}
+      </option>
+    </select>
+
     <input
+      v-else
       :id="control"
       :autofocus="settings.autofocus || false"
       :autocomplete="settings.autocomplete || 'off'"
       :value="value"
       :class="{'is-invalid': error }"
+      :type="settings.type || 'text'"
       ref="myInput"
       @input="onInput"
       @change="onChanged"
@@ -36,7 +58,12 @@ export default {
     }
   },
   created () {
-    this.value = this.settings.initialValue || ''
+    // if (this.settings.initialValue === 0) {
+    //   this.value = 0
+    // } else {
+    //   this.value = this.settings.initialValue || ''
+    // }
+    this.value = this.settings.initialValue === 0 ? 0 : this.settings.initialValue || ''
   },
   mounted () {
     if (this.settings.autofocus) {
@@ -47,7 +74,8 @@ export default {
     onInput (e) {
       this.value = e.target.value
     },
-    onChanged () {
+    onChanged (e) {
+      this.value = e.target.value
       this.$emit('changed', { control: this.control, value: this.value })
     },
     onFocus () {
@@ -72,8 +100,8 @@ export default {
     text-align: left
     font-size: 1.2rem
     margin-bottom: .4rem
-  & input
-    margin-bottom: 2rem
+  & input, select
+    // margin-bottom: 1rem
     border-style: none
     // border: 1px solid #cdcdcd
     outline: 1px solid #cdcdcd
@@ -94,7 +122,8 @@ export default {
   color: red
   text-align: left
   position: absolute
-  top: calc(100% - 2.8rem)
+  top: calc(100% - .9rem)
+  line-height: 1
 
 .slide-right-enter-from, .slide-right-leave-to
   transform: translateX(-1rem)

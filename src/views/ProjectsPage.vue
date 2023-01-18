@@ -18,7 +18,7 @@
         <span> ?</span>
       </div>
     </t-modal>
-    <div class="large-btn-container">
+    <div class="page-large-btn-container">
       <t-button label="add project" @clicked="$router.push('/project-form')" />
     </div>
 
@@ -29,7 +29,7 @@
         :title="project.project + ' (' + project.tasks.filter(task => task.completed).length + '/' + project.tasks.length + ')'"
       >
         <template v-slot:content>
-          <div class="btn-container">
+          <div class="page-btn-container">
             <t-button label="detail" small-size @clicked="$router.push('/project/' + project.id)" />
             <t-button label="edit" small-size @clicked="$router.push('/project-form/' + project.id)" />
             <t-button
@@ -135,14 +135,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
 @import '../styles/variables.styl'
-.btn-container
-  display: flex
-  justify-content: flex-end
-  align-items: center
-  padding: $list-items-padding
-  border-bottom: 1px solid #efefef
-.large-btn-container
-  padding-bottom: 2rem
+
 img
   margin-bottom: 2rem
 </style>

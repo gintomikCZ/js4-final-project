@@ -1,5 +1,6 @@
 <template>
   <svg
+    v-if="icon.icon"
     :fill="icon.color"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
@@ -29,14 +30,14 @@ export default {
       type: Number,
       default: 16
     },
-    icon: {
+    icon: { // { icon: '', color: '' }
       type: Object,
       required: true
     }
   },
   computed: {
     iconFound () {
-      return getIcon(this.icon.icon)
+      return this.icon.icon ? getIcon(this.icon.icon) : {}
     }
   }
 }
