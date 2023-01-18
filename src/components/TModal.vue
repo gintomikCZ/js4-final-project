@@ -1,10 +1,9 @@
 
 <template>
-  <transition name="modal-1">
-    <div
-      v-if="show" class="modal-bg"
-    >
-        <div class="modal-content">
+  <transition name="modal-1" @after-enter="onBgEnter">
+    <div v-if="showBg" class="modal-bg">
+      <transition name="modal-2" @after-leave="onContentLeave">
+        <div v-if="showContent" class="modal-content">
           <div class="modal-header">
             <div class="modal-title">{{ title }}</div>
             <div>
@@ -19,6 +18,7 @@
             <t-button v-if="cancelButtonDisplay" :label="cancelButtonLabel" small-size @clicked="onCancelClicked"/>
           </div>
         </div>
+      </transition>
     </div>
   </transition>
 </template>
@@ -52,6 +52,17 @@ export default {
   },
   data () {
     return {
+      showBg: false,
+      showContent: false
+    }
+  },
+  watch: {
+    show (nv) {
+      if (nv) {
+        this.showBg = true
+      } else {
+        this.showContent = false
+      }
     }
   },
   methods: {
@@ -64,6 +75,12 @@ export default {
     onCancelClicked () {
       this.$emit('cancel-clicked')
     },
+    onBgEnter () {
+      this.showContent = true
+    },
+    onContentLeave () {
+      this.showBg = false
+    }
   },
   components: { TButton }
 }
