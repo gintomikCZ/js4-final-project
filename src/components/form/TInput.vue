@@ -17,6 +17,7 @@
         v-for="option in settings.options"
         :key="option.value"
         :value="option.value"
+        :selected="option.value === settings.initialValue"
       >{{ option.label  }}
       </option>
     </select>
