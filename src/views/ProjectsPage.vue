@@ -1,51 +1,41 @@
 <template>
-  <div>
-
-    <h1>projects</h1>
-    <img class="project-img" width="150" src="../assets/img/project-manager-icon.png" alt="ikona" />
-    <t-modal
-      :show="showDeleteModal"
-      title="confirm delete"
-      ok-button-label="delete"
-      cancel-button-label="cancel"
-      @close-me="closeDeleteModal"
-      @ok-clicked="deleteProject"
-      @cancel-clicked="closeDeleteModal"
-    >
-      <div>
-        <span>Do you really want to delete project </span>
-        <strong>{{ projectToDelete.project }}</strong>
-        <span> ?</span>
-      </div>
-    </t-modal>
-    <div class="page-large-btn-container">
-      <t-button label="add project" @clicked="$router.push('/project-form')" />
-    </div>
-
-    <div v-if="!loading">
-      <t-accordeon
-        v-for="project in projectsToDisplay"
-        :key="project.id"
-        :title="project.project + ' (' + project.tasks.filter(task => task.completed).length + '/' + project.tasks.length + ')'"
-      >
+  <t-page
+    title="projects"
+    addButtonLabel="add project"
+    addButtonRedirect="/project-form"
+    :loading="loading"
+    img="projects.png"
+  >
+    <template v-slot:content>
+      <t-accordeon v-for="project in projectsToDisplay" :key="project.id"
+        :title="project.project + ' (' + project.tasks.filter(task => task.completed).length + '/' + project.tasks.length + ')'">
         <template v-slot:content>
           <div class="page-btn-container">
             <t-button label="detail" small-size @clicked="$router.push('/project/' + project.id)" />
             <t-button label="edit" small-size @clicked="$router.push('/project-form/' + project.id)" />
-            <t-button
-              v-if="!project.tasks.length"
-              label="delete"
-              small-size
-              @clicked="onDeleteClicked(project)"
-            />
+            <t-button v-if="!project.tasks.length" label="delete" small-size @clicked="onDeleteClicked(project)" />
             <t-button label="add task" small-size @clicked="$router.push('/task-form-project/' + project.id)" />
           </div>
           <t-list :items="project.tasks" display-icons />
         </template>
       </t-accordeon>
+    </template>
+  </t-page>
+  <t-modal
+    :show="showDeleteModal"
+    title="confirm delete"
+    ok-button-label="delete"
+    cancel-button-label="cancel"
+    @close-me="closeDeleteModal"
+    @ok-clicked="deleteProject"
+    @cancel-clicked="closeDeleteModal"
+  >
+    <div>
+      <span>Do you really want to delete project </span>
+      <strong>{{ projectToDelete.project }}</strong>
+      <span> ?</span>
     </div>
-  <t-loading v-else />
-  </div>
+  </t-modal>
 </template>
 
 <script>
@@ -55,7 +45,7 @@ import { formatDate, isPast } from '../helpers/dateFunctions.js'
 import TAccordeon from '../components/TAccordeon.vue'
 import TList from '../components/TList.vue'
 import TButton from '../components/TButton.vue'
-import TLoading from '../components/TLoading.vue'
+import TPage from '../components/TPage.vue'
 import TModal from '../components/TModal.vue'
 
 export default {
@@ -129,13 +119,9 @@ export default {
       })
     }
   },
-  components: { TAccordeon, TList, TButton, TLoading, TModal }
+  components: { TAccordeon, TList, TButton, TPage, TModal }
 }
 
 </script>
 <style lang="stylus" scoped>
-@import '../styles/variables.styl'
-
-img
-  margin-bottom: 2rem
 </style>

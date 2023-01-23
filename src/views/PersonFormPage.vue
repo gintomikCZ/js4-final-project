@@ -1,16 +1,21 @@
 <template>
-  <div>
-    <h1>{{ title }}</h1>
-    <t-form :settings="settings" v-if="!loading" @submited="onSubmited" />
-    <t-loading v-else />
-  </div>
+
+  <t-page
+    :title="title"
+    :loading="loading"
+  >
+    <template v-slot:content>
+      <t-form :settings="settings" v-if="!loading" @submited="onSubmited" />
+    </template>
+  </t-page>
+
 </template>
 
 <script>
 
 import db from '../helpers/db.js'
 import TForm from '../components/form/TForm.vue'
-import TLoading from '../components/TLoading.vue'
+import TPage from '../components/TPage.vue'
 export default {
   name: 'PersonFormPage',
   data () {
@@ -77,7 +82,7 @@ export default {
       })
     }
   },
-  components: { TForm, TLoading }
+  components: { TForm, TPage }
 }
 
 </script>

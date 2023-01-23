@@ -47,6 +47,4 @@ body
   padding: $list-items-padding
   border-bottom: 1px solid #efefef
 
-.page-large-btn-container
-  padding-bottom: 2rem
 </style>

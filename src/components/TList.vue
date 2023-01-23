@@ -12,22 +12,36 @@
         <div class="header">{{  item.header }}</div>
         <div class="subtitle">{{ item.subtitle }}</div>
       </div>
+      <div class="right">
+        <t-button
+          v-for="button in item.buttons" :key="button"
+          :label="button"
+          small-size
+          @clicked="onClicked(item, button)"
+        />
+      </div>
     </li>
   </ul>
 </template>
 <script>
 import TIcon from './TIcon.vue'
+import TButton from './TButton.vue'
 
 export default {
   name: 'TList',
   props: {
-    items: Array, // { id: 23, header: 'tzsdutuf', subtitle: 'sdhjkfhsdk', icon: { icon: 'check', color: 'green' }}
+    items: Array, // { id: 23, header: 'tzsdutuf', subtitle: 'sdhjkfhsdk', icon: { icon: 'check', color: 'green' }, buttons: [ label]}
     displayIcons: {
       type: Boolean,
       default: false
     }
   },
-  components: { TIcon }
+  methods: {
+    onClicked (item, button) {
+      console.log(item, button)
+    }
+  },
+  components: { TIcon, TButton }
 }
 
 </script>
@@ -44,6 +58,8 @@ li
   text-align: left
   display: flex
   justify-content: flex-start
+.content
+  flex-grow: 1
 .header
   font-weight: bold
 .subtitle
@@ -54,4 +70,8 @@ li
   justify-content: center
   align-items: center
   margin-right: 1rem
+.right
+  display: flex
+  align-items: center
+  gap: 1rem
 </style>

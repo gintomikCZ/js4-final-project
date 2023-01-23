@@ -1,14 +1,17 @@
 <template>
-  <div>
-    <h1>{{ title }}</h1>
-    <t-form :settings="settings" v-if="!loading" @submited="onSubmited" />
-    <t-loading v-else />
-  </div>
+  <t-page
+    :title="title"
+    :loading="loading"
+  >
+    <template v-slot:content>
+      <t-form :settings="settings" v-if="!loading" @submited="onSubmited" />
+    </template>
+  </t-page>
 </template>
 
 <script>
 import TForm from '../components/form/TForm.vue'
-import TLoading from '../components/TLoading.vue'
+import TPage from '../components/TPage.vue'
 import db from '../helpers/db.js'
 
 export default {
@@ -28,7 +31,7 @@ export default {
           type: 'select',
           valRules: [
             { rule: 'required', message: 'the project is required' }
-          ]
+          ],
         },
         date: {
           label: 'date to complete',
@@ -39,9 +42,8 @@ export default {
         },
         completed: {
           label: 'completed',
-          type: 'select',
+          type: 'radio',
           options: [
-            { value: '', label: '' },
             { value: 0, label: 'no' },
             { value: 1, label: 'yes' }
           ],
@@ -51,9 +53,8 @@ export default {
         },
         priority: {
           label: 'priority',
-          type: 'select',
+          type: 'radio',
           options: [
-            { value: '', label: '' },
             { value: 1, label: 'low' },
             { value: 2, label: 'medium' },
             { value: 3, label: 'high' }
@@ -74,16 +75,25 @@ export default {
     }
   },
   created () {
-    if (this.mode === 'add') {
-      this.loading = false
-    } else {
-      db.get('js4tasks/' + this.$route.params.id).then(record => {
-        Object.keys(this.settings).forEach(control => {
-          this.settings[control].initialValue = record[control]
-        })
-        this.loading = false
+    const promises = [
+      db.get('js4projects').then(projects => {
+        this.settings.projectid.options = [{ value: '', label: '' }].concat(
+          projects.map(project => {
+            return { value: project.id, label: project.project }
+          })
+        )
       })
+    ]
+    if (this.mode === 'edit') {
+      promises.push(
+        db.get('js4tasks/' + this.$route.params.id).then(record => {
+          Object.keys(this.settings).forEach(control => {
+            this.settings[control].initialValue = record[control]
+          })
+        })
+      )
     }
+    Promise.all(promises).then(() => { this.loading = false })
   },
   methods: {
     onSubmited (data) {
@@ -95,7 +105,7 @@ export default {
       })
     }
   },
-  components: { TLoading, TForm }
+  components: { TPage, TForm }
 }
 
 </script>
