@@ -75,6 +75,10 @@ export default {
     }
   },
   created () {
+    if (this.$route.params.projectid) {
+      this.settings.projectid.initialValue = this.$route.params.projectid
+      this.settings.projectid.disabled = true
+    }
     const promises = [
       db.get('js4projects').then(projects => {
         this.settings.projectid.options = [{ value: '', label: '' }].concat(

@@ -46,21 +46,26 @@ const routes = [
     name: 'projectFormEdit',
     component: () => import('../views/ProjectFormPage.vue')
   },
+
+
   {
     path: '/task-form',
     name: 'taskFormAdd',
-    component: () => import('../views/TaskFormPage.vue')
+    component: () => import('../views/TaskFormPage.vue') // $route.params neobsahuje nic
   },
   {
     path: '/task-form-project/:projectid',
     name: 'taskFormAddProject',
-    component: () => import('../views/TaskFormPage.vue')
+    component: () => import('../views/TaskFormPage.vue') // $route.params.projectid ... to je id projektu, do kterého task přidáváme
   },
   {
     path: '/task-form/:id',
     name: 'taskFormEdit',
-    component: () => import('../views/TaskFormPage.vue')
+    component: () => import('../views/TaskFormPage.vue') // $route.params.id .... to je id editovaného tasku
   },
+
+
+
   {
     path: '/person-form',
     name: 'personFormAdd',

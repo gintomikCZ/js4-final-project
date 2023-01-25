@@ -30,15 +30,25 @@ import TButton from './TButton.vue'
 export default {
   name: 'TList',
   props: {
-    items: Array, // { id: 23, header: 'tzsdutuf', subtitle: 'sdhjkfhsdk', icon: { icon: 'check', color: 'green' }, buttons: [ label]}
+    items: Array, /*
+    [
+      {
+        id: 23,
+        header: 'tzsdutuf',
+        subtitle: 'sdhjkfhsdk',
+        icon: { icon: 'check', color: 'green' },
+        buttons: [ label ]
+      }
+    ]
+      */
     displayIcons: {
       type: Boolean,
       default: false
     }
   },
   methods: {
-    onClicked (item, button) {
-      console.log(item, button)
+    onClicked (item, button) { // {...}, 'mark done'
+      this.$emit('clicked', { button, item })
     }
   },
   components: { TIcon, TButton }

@@ -3,11 +3,20 @@
 
     <label :for="control">{{ settings.label }}</label>
 
-    <select v-if="settings.type === 'select'" :id="control" :autofocus="settings.autofocus || false"
-      :autocomplete="settings.autocomplete || 'off'" :class="{ 'is-invalid': error }" ref="myInput" @change="onChanged"
-      @focus="onFocus" @blur="onBlur">
+    <select
+      v-if="settings.type === 'select'"
+      :id="control"
+      :autofocus="settings.autofocus || false"
+      :autocomplete="settings.autocomplete || 'off'"
+      :class="{ 'is-invalid': error }"
+      :disabled="settings.disabled || false"
+      ref="myInput"
+      @change="onChanged"
+      @focus="onFocus"
+      @blur="onBlur"
+    >
       <option v-for="option in settings.options" :key="option.value" :value="option.value"
-        :selected="option.value === settings.initialValue">{{ option.label }}
+        :selected="'' + option.value === '' + settings.initialValue">{{ option.label }}
       </option>
     </select>
 

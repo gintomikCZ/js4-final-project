@@ -4,12 +4,34 @@
     :loading="loading"
   >
     <template v-slot:content>
+      <div class="top-buttons">
+        <t-button label="edit" @clicked="onEditButtonClicked"/>
+        <t-button label="add task" @clicked="onAddTaskButtonClicked"/>
+        <t-button v-if="!tasks.length" label="delete project" @clicked="onDeleteButtonClicked" />
+      </div>
       <div>
-        <t-list :items="tasksToDisplay" display-icons />
+        <t-list
+          :items="tasksToDisplay"
+          display-icons
+          @clicked="onItemButtonClicked"
+        />
       </div>
     </template>
   </t-page>
-
+  <t-modal
+    :show="showDeleteModal"
+    title="confirm delete"
+    ok-button-label="delete"
+    @close-me="closeDeleteModal"
+    @ok-clicked="deleteProject"
+    @cancel-clicked="closeDeleteModal"
+  >
+    <div>
+      <span>do you really want to delete project </span>
+      <strong>{{ project.project }}</strong>
+      <span> ?</span>
+    </div>
+  </t-modal>
 
 </template>
 
@@ -19,7 +41,8 @@ import db from '../helpers/db.js'
 import { formatDate, isPast } from '../helpers/dateFunctions.js'
 import TPage from '../components/TPage.vue'
 import TList from '../components/TList.vue'
-// import TButton from '../components/TButton.vue'
+import TButton from '../components/TButton.vue'
+import TModal from '../components/TModal.vue'
 
 export default {
   name: 'ProjectDetailPage',
@@ -27,7 +50,8 @@ export default {
     return {
       project: null,
       loading: true,
-      tasks: null
+      tasks: null,
+      showDeleteModal: false
     }
   },
   computed: {
@@ -69,11 +93,52 @@ export default {
       this.loading = false
     })
   },
-  components: { TPage, TList }
-
+  methods: {
+    onItemButtonClicked (payload) {
+      if (payload.button === 'edit') {
+        this.$router.push('/task-form/' + payload.item.id)
+      } else if (['mark done', 'mark undone'].indexOf(payload.button) >= 0) {
+        const completed = payload.button === 'mark done' ? 1 : 0
+        db.put('js4tasks', { id: payload.item.id, completed }).then(() => {
+          db.get('js4tasks/' + payload.item.id).then((record) => {
+            this.tasks.find(task => task.id === payload.item.id).completed = record.completed
+          })
+        })
+      }
+    },
+    onEditButtonClicked () {
+      this.$router.push('/project-form/' + this.project.id)
+    },
+    onAddTaskButtonClicked () {
+      this.$router.push('/task-form-project/' + this.project.id)
+    },
+    onDeleteButtonClicked () {
+      this.showDeleteModal = true
+    },
+    closeDeleteModal () {
+      this.showDeleteModal = false
+    },
+    deleteProject () {
+      db.delete('js4projects', { id: this.project.id }).then(() => {
+        this.closeDeleteModal()
+        this.$router.push('/projects')
+      })
+    }
+  },
+  components: { TPage, TList, TButton, TModal }
+  /*
+    db.get(js4tasks?id=8) // [{id: 8, task: posekat travu}]
+    db.get(js4tasks/8) // {id: 8, task: posekat travu}
+  */
 }
 
 </script>
 
 <style lang="stylus" scoped>
+@import '../styles/variables.styl'
+.top-buttons
+  display: flex
+  gap: 1rem
+  justify-content: center
+  margin-bottom: $margin
 </style>
