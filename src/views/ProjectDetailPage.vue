@@ -62,7 +62,7 @@ export default {
       return this.tasks.map(task => {
         let icon = ''
         let color = ''
-        const buttons = ['edit', task.completed ? 'mark undone' : 'mark done']
+        const buttons = ['edit', task.completed ? 'undone' : 'done']
         if (task.completed) {
           icon = 'check',
           color = 'green'
@@ -97,8 +97,8 @@ export default {
     onItemButtonClicked (payload) {
       if (payload.button === 'edit') {
         this.$router.push('/task-form/' + payload.item.id)
-      } else if (['mark done', 'mark undone'].indexOf(payload.button) >= 0) {
-        const completed = payload.button === 'mark done' ? 1 : 0
+      } else if (['done', 'undone'].indexOf(payload.button) >= 0) {
+        const completed = payload.button === 'done' ? 1 : 0
         db.put('js4tasks', { id: payload.item.id, completed }).then(() => {
           db.get('js4tasks/' + payload.item.id).then((record) => {
             this.tasks.find(task => task.id === payload.item.id).completed = record.completed

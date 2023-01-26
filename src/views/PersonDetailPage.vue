@@ -6,7 +6,14 @@
     <template v-slot:content>
       <div class="top-buttons">
         <t-button label="edit" @clicked="onEditButtonClicked" />
-        <t-button label="delete" @clicked="onDeleteButtonClicked" />
+        <t-button v-if="!tasks.length" label="delete" @clicked="onDeleteButtonClicked" />
+      </div>
+      <div>
+        <t-list
+          :items="tasksToDisplay"
+          display-icons
+          @clicked="onItemButtonClicked"
+        />
       </div>
     </template>
   </t-page>
@@ -28,9 +35,11 @@
 
 <script>
 import db from '../helpers/db.js'
+import { isPast, formatDate } from '../helpers/dateFunctions.js'
 import TPage from '../components/TPage.vue'
 import TButton from '../components/TButton.vue'
 import TModal from '../components/TModal.vue'
+import TList from '../components/TList.vue'
 export default {
   name: 'PersonDetailPage',
   data () {
@@ -44,6 +53,27 @@ export default {
   computed: {
     personid () {
       return this.$route.params.id
+    },
+    tasksToDisplay () {
+      return this.tasks.map(task => {
+        let icon = ''
+        let color = ''
+        const buttons = ['edit', task.completed ? 'undone' : 'done']
+        if (task.completed) {
+          icon = 'check',
+            color = 'green'
+        } else if (isPast(task.date)) {
+          icon = 'warning',
+            color = 'red'
+        }
+        return {
+          id: task.id,
+          header: task.task,
+          subtitle: formatDate(task.date),
+          icon: { icon, color },
+          buttons
+        }
+      })
     }
   },
   created () {
@@ -74,9 +104,23 @@ export default {
         this.closeDeleteModal()
         this.$router.push('/persons')
       })
+    },
+    onItemButtonClicked (payload) {
+      // payload.item, payload.button
+      // edit
+      if (payload.button === 'edit') {
+        this.$router.push('/task-form/' + payload.item.id)
+        return
+      }
+      const completed = payload.button === 'done' ? 1 : 0
+      db.put('js4tasks', { id: payload.item.id, completed }).then(() => {
+        db.get('js4tasks/' + payload.item.id).then((record) => {
+          this.tasks.find(task => task.id === payload.item.id).completed = record.completed
+        })
+      })
     }
   },
-  components: { TPage, TButton, TModal }
+  components: { TPage, TButton, TModal, TList }
 }
 
 </script>
