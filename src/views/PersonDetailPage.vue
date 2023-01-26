@@ -31,6 +31,20 @@
       <span> ?</span>
     </div>
   </t-modal>
+  <t-modal
+    :show="showAddTaskModal"
+    title="add task"
+    ok-button-label="submit"
+    @close-me="closeAddTaskModal"
+    @cancel-clicked="closeAddTaskModal"
+    @ok-clicked="addTask">
+    <div>
+      <t-input
+        control="addTask"
+        :settings="addTaskSettings"
+        @changed="onAddTaskChanged" />
+    </div>
+  </t-modal>
 </template>
 
 <script>
@@ -40,6 +54,8 @@ import TPage from '../components/TPage.vue'
 import TButton from '../components/TButton.vue'
 import TModal from '../components/TModal.vue'
 import TList from '../components/TList.vue'
+import TInput from '../components/form/TInput.vue'
+
 export default {
   name: 'PersonDetailPage',
   data () {
@@ -47,7 +63,13 @@ export default {
       person: null,
       loading: true,
       tasks: null,
-      showDeleteModal: false
+      showDeleteModal: false,
+      showAddTaskModal: false,
+      addTaskSettings: {
+        type: 'select',
+        options: []
+      },
+      taskToAdd: null
     }
   },
   computed: {
@@ -58,7 +80,7 @@ export default {
       return this.tasks.map(task => {
         let icon = ''
         let color = ''
-        const buttons = ['edit', task.completed ? 'undone' : 'done']
+        const buttons = ['remove', 'edit', task.completed ? 'undone' : 'done']
         if (task.completed) {
           icon = 'check',
             color = 'green'
@@ -67,7 +89,7 @@ export default {
             color = 'red'
         }
         return {
-          id: task.id,
+          id: task.taskid,
           header: task.task,
           subtitle: formatDate(task.date),
           icon: { icon, color },
@@ -81,15 +103,18 @@ export default {
       db.get('js4persons/' + this.personid).then(record => {
         this.person = record
       }),
-      db.get('js4personstasks?personid=' + this.personid).then((tasks) => {
-        this.tasks = tasks
-      })
+      this.fetchTasks()
     ]
     Promise.all(promises).then(() => {
       this.loading = false
     })
   },
   methods: {
+    fetchTasks () {
+      return db.get('js4personstasks?personid=' + this.personid).then((tasks) => {
+        this.tasks = tasks
+      })
+    },
     onEditButtonClicked () {
       this.$router.push('/person-form/' + this.personid)
     },
@@ -106,21 +131,38 @@ export default {
       })
     },
     onItemButtonClicked (payload) {
-      // payload.item, payload.button
-      // edit
       if (payload.button === 'edit') {
         this.$router.push('/task-form/' + payload.item.id)
-        return
-      }
-      const completed = payload.button === 'done' ? 1 : 0
-      db.put('js4tasks', { id: payload.item.id, completed }).then(() => {
-        db.get('js4tasks/' + payload.item.id).then((record) => {
-          this.tasks.find(task => task.id === payload.item.id).completed = record.completed
+      } else if (payload.button === 'remove') {
+        const obj = this.tasks.find((item) => {
+          return ('' + item.personid === '' + this.personid) && ('' + item.taskid === '' + payload.item.id)
         })
-      })
+        db.delete('js4personstasks', { id: obj.id }).then(() => {
+          this.fetchTasks()
+        })
+      } else {
+        const completed = payload.button === 'done' ? 1 : 0
+        db.put('js4tasks', { id: payload.item.id, completed }).then(() => {
+          db.get('js4tasks/' + payload.item.id).then((record) => {
+            this.tasks.find(task => task.id === payload.item.id).completed = record.completed
+          })
+        })
+      }
+    },
+    onAddTaskClicked () {
+      //TODO: onAddTaskClicked
+    },
+    closeAddTaskModal () {
+      this.showAddTaskModal = false
+    },
+    onAddTaskChanged (payload) {
+      this.taskToAdd = payload.value
+    },
+    addTask () {
+      //TODO: AddTask
     }
   },
-  components: { TPage, TButton, TModal, TList }
+  components: { TPage, TButton, TModal, TList, TInput }
 }
 
 </script>

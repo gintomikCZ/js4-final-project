@@ -83,5 +83,5 @@ li
 .right
   display: flex
   align-items: center
-  gap: 1rem
+  gap: $flex-gap
 </style>

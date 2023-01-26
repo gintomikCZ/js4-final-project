@@ -46,5 +46,6 @@ body
   align-items: center
   padding: $list-items-padding
   border-bottom: 1px solid #efefef
+  gap: $flex-gap
 
 </style>
