@@ -48,13 +48,13 @@
 </template>
 
 <script>
-import db from '../helpers/db.js'
-import { isPast, formatDate } from '../helpers/dateFunctions.js'
-import TPage from '../components/TPage.vue'
-import TButton from '../components/TButton.vue'
-import TModal from '../components/TModal.vue'
-import TList from '../components/TList.vue'
-import TInput from '../components/form/TInput.vue'
+import db from '@/helpers/db.js'
+import { isPast, formatDate } from '@/helpers/dateFunctions.js'
+import TPage from '@/components/TPage.vue'
+import TButton from '@/components/TButton.vue'
+import TModal from '@/components/TModal.vue'
+import TList from '@/components/TList.vue'
+import TInput from '@/components/form/TInput.vue'
 
 export default {
   name: 'PersonDetailPage',

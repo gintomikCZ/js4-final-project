@@ -1,51 +1,124 @@
 <template>
-  <h1>welcome :-)</h1>
-  <form>
-    <t-button label="cancel" btn-type="button" />
-    <t-button small-size label="submit" />
-  </form>
-  <t-accordeon style="margin-top: 50px" title="Já jsem nadpis">
+  <t-page
+    title="welcome :-)"
+    :loading="loading"
+  >
     <template v-slot:content>
-      <ul>
-        <li>
-          <t-button label="edit" smallSize />
-          <t-button label="add new" smallSize />
-          <t-button label="delete" smallSize />
-        </li>
-        <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Exercitationem minus, ab blanditiis vitae aut, eos
-          laborum rem omnis vel sit a voluptas inventore sequi amet aliquid deleniti adipisci reiciendis odio!</li>
-      </ul>
+      <div>
+        <ul>
+          <li>statistics</li>
+          <li>
+            <span>projects</span>
+            <strong>{{ numberOfProjects }}</strong>
+          </li>
+          <li>
+            <span>total tasks</span>
+            <strong>{{ numberOfTasks }}</strong>
+          </li>
+          <li>
+            <span>completed</span>
+            <strong>{{ numberOfCompleted }}</strong>
+          </li>
+          <li>
+            <span>uncompleted</span>
+            <strong>{{ numberOfUncompleted }}</strong>
+          </li>
+          <li>
+            <span>uncompleted over due</span>
+            <strong>{{ numberOfOverDue }}</strong>
+          </li>
+          <li>
+            <span>persons</span>
+            <strong>{{ numberOfPersons }}</strong>
+          </li>
+        </ul>
+      </div>
     </template>
-  </t-accordeon>
+  </t-page>
 
 </template>
 
 <script>
-import TButton from '../components/TButton.vue'
-import TAccordeon from '../components/TAccordeon.vue'
+import db from '../helpers/db.js'
+import { isPast } from '../helpers/dateFunctions.js'
+import TPage from '@/components/TPage.vue'
+
 export default {
   name: 'WelcomePage',
-  components: { TButton, TAccordeon }
+  data () {
+    return {
+      projects: [],
+      tasks: [],
+      persons: []
+    }
+  },
+  computed: {
+    numberOfProjects () {
+      return this.projects.length
+    },
+    numberOfTasks () {
+      return this.tasks.length
+    },
+    numberOfCompleted () {
+      return this.tasks.filter(task => task.completed).length
+      // return this.tasks.reduce((acc, cur) => {
+      //   return acc + cur.completed
+      // }, 0)
+    },
+    numberOfUncompleted () {
+      return this.numberOfTasks - this.numberOfCompleted
+    },
+    numberOfOverDue () {
+      // chceme vybrat všechny tasky, které jsou unpomleted a zároveň jejich datum je PAST
+      // return this.tasks.filter(task => !task.completed && isPast(task.date)).length
+      return this.tasks.reduce((acc, cur) => {
+        return acc + !cur.completed && isPast(cur.date) ? 1 : 0
+      })
+    },
+    numberOfPersons () {
+      return this.persons.length
+    }
+  },
+  created () {
+    const promises = [
+      db.get('js4projects').then((projects) => {
+        this.projects = projects
+      }),
+      db.get('js4tasks').then((tasks) => {
+        this.tasks = tasks
+      }),
+      db.get('js4persons').then((persons) => {
+        this.persons = persons
+      })
+    ]
+    Promise.all(promises).then(() => {
+      this.loading = false
+    })
+  },
+  components: {TPage }
 }
 
 </script>
 
 <style lang="stylus" scoped>
 @import '../styles/variables.styl'
-
 ul
-  margin: 0
-  padding: 0
-  display: flex
-  flex-direction: column
   list-style-type: none
-ul li
-  padding: $list-items-padding
-ul li:first-child
- display: flex
- justify-content: flex-end
- border-bottom: 1px solid #cdcdcd
- align-items: center
-ul li:not(:first-child)
-  text-align: justify
+  margin: auto
+  padding: 0
+  width: 80%
+  max-width: 400px
+  border: 1px solid #cdcdcd
+  border-radius: $border-radius
+  overflow: hidden
+  & li
+    padding: .4em .8em
+    &:not(:last-child)
+      border-bottom: 1px solid #efefef
+    &:first-child
+      font-weight: bold
+      background: lighten($secondary, 60%)
+    &:not(:first-child)
+      display: flex
+      justify-content: space-between
 </style>
