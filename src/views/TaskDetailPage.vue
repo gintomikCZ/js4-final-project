@@ -107,6 +107,12 @@ export default {
       return db.get('js4personstasks?taskid=' + this.taskid).then(persons => {
         this.persons = persons
       })
+      /*
+        [
+          { id: 1, taskid: 2, personid: 5, task: 'natřít plot', first: 'Karel', last: 'Houska', ...},
+          { id: 2, taskid: 2, personid: 3}
+        ]
+      */
     },
     onEditButtonClicked () {
       this.$router.push('/task-form/' + this.taskid)
@@ -138,10 +144,25 @@ export default {
       }
     },
     onAddPersonClicked () {
-      db.get('js4persons').then(persons => {
-        const personids = this.persons.map(person => person.personid)
-        this.addPersonSettings.options = persons.filter(person => personids.indexOf(person.id) < 0)
-          .map(person => { return { value: person.id, label: person.last + ' ' + person.first } })
+      // načíst z databáze všechny persons
+      // vyfiltrovat to načtené pole na persons, které ještě nejsou našemu úkolu přiřazeny
+      // namapovat vyfiltrované pole na formát { value: personid, label: popisek = last + first + (position) }
+      // this.persons = [ {personid: 'jablko', last: '', first: '' }, §hruška, 'švestka']
+      db.get('js4persons').then((allPersons) => {
+        // porovnávat budeme podle personid
+        // první na porovnání - načtená tabulka persons .... a tam mám hodnotu person.id
+        // druhá na porovnávání -
+        const personsFiltered = allPersons.filter(personFromAll => {
+          return !this.persons.some(item => {
+            return '' + item.personid === '' + personFromAll.id
+          })
+        })
+        this.addPersonSettings.options = personsFiltered.map(person => {
+          return {
+            value: person.id,
+            label: person.last + ' ' + person.first + ' (' + person.position + ')'
+          }
+        })
         this.addPersonSettings.options.unshift({ value: '', label: '' })
       }).then(() => {
         this.personToAdd = null

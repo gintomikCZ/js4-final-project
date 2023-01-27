@@ -1,14 +1,33 @@
 <template>
-
   <t-page
     :title="title"
     :loading="loading"
   >
     <template v-slot:content>
-      <t-form :settings="settings" v-if="!loading" @submited="onSubmited" />
+      <t-form
+        v-if="!loading"
+        :settings="settings"
+        @submited="onSubmited"
+        @add-new="onAddNew" />
     </template>
   </t-page>
+  <t-modal
+    :show="showAddNewModal"
+    title="add position"
+    ok-button-label="submit"
+    @close-me="closeAddNewModal"
+    @cancel-clicked="closeAddNewModal"
+    @ok-clicked="addPosition"
+  >
+    <div>
+      <t-input
+        control="addNewPosition"
+        :settings="addNewPositionSettings"
+        @changed="onAddNewPositionChanged"
+      />
+    </div>
 
+  </t-modal>
 </template>
 
 <script>
@@ -16,6 +35,8 @@
 import db from '../helpers/db.js'
 import TForm from '../components/form/TForm.vue'
 import TPage from '../components/TPage.vue'
+import TModal from '../components/TModal.vue'
+import TInput from '../components/form/TInput.vue'
 export default {
   name: 'PersonFormPage',
   data () {
@@ -33,7 +54,13 @@ export default {
           label: 'position',
           options: []
         }
-      }
+      },
+      showAddNewModal: false,
+      addNewPositionSettings: {
+        label: 'position',
+        autofocus: true
+      },
+      addNewPositionValue: null
     }
   },
   computed: {
@@ -45,20 +72,7 @@ export default {
     }
   },
   created () {
-    const promises = [
-      db.get('js4positions').then((positions) => {
-        this.settings.positionid.options =
-          [].concat(
-            [{ value: '', label: '' }],
-            positions.map(position => {
-            return {
-              value: position.id,
-              label: position.position
-            }
-          })
-        )
-      })
-    ]
+    const promises = [ this.fetchPositions() ]
     if (this.mode === 'edit') {
       promises.push(
         db.get('js4persons/' + this.$route.params.id).then(record => {
@@ -73,6 +87,18 @@ export default {
     })
   },
   methods: {
+    fetchPositions () {
+      return db.get('js4positions').then((positions) => {
+        this.settings.positionid.options = positions.map(position => {
+          return {
+            value: position.id,
+            label: position.position
+          }
+        })
+        this.settings.positionid.options.unshift({ value: '', label: '' })
+        this.settings.positionid.options.push({ value: 'addNew', label: 'add new' })
+      })
+    },
     onSubmited (data) {
       const promise = this.mode === 'add'
         ? db.post('js4persons', data)
@@ -80,9 +106,27 @@ export default {
       promise.then(() => {
         this.$router.push('/persons')
       })
+    },
+    onAddNew (control) {
+      if (control === 'positionid') {
+        this.showAddNewModal = true
+      }
+    },
+    closeAddNewModal () {
+      this.showAddNewModal = false
+    },
+    addPosition () {
+      db.post('js4positions', { position: this.addNewPositionValue }).then(() => {
+        this.fetchPositions().then (() => {
+          this.closeAddNewModal()
+        })
+      })
+    },
+    onAddNewPositionChanged (payload) {
+      this.addNewPositionValue = payload.value
     }
   },
-  components: { TForm, TPage }
+  components: { TForm, TPage, TModal, TInput }
 }
 
 </script>

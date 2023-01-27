@@ -10,6 +10,7 @@
       :autocomplete="settings.autocomplete || 'off'"
       :class="{ 'is-invalid': error }"
       :disabled="settings.disabled || false"
+      :value="value"
       ref="myInput"
       @change="onChanged"
       @focus="onFocus"
@@ -76,6 +77,11 @@ export default {
     },
     onChanged (e) {
       this.value = e.target.value
+      if (this.value === 'addNew') {
+        this.$emit('add-new', this.control)
+        this.value = ''
+        return
+      }
       this.$emit('changed', { control: this.control, value: this.value })
       if (this.settings.type === 'radio') {
         this.$emit('blured', this.control)

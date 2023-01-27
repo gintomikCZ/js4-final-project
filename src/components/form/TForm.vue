@@ -19,6 +19,7 @@
         @changed="onChanged"
         @focused="onFocused"
         @blured="onBlured"
+        @add-new="onAddNew"
       />
     </template>
     <t-button class="submit-button" label="submit" btn-type="submit" />
@@ -104,6 +105,9 @@ export default {
       } else {
         this.showErrorModal = true
       }
+    },
+    onAddNew (par) {
+      this.$emit('add-new', par)
     }
   },
   components: { TInput, TButton, TModal }
