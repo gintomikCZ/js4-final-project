@@ -1,7 +1,11 @@
 <template>
   <nav class="nav">
     <template v-if="showHamburger">
-      <t-hamburger v-if="showHamburger" @clicked="onHamburgerClicked"/>
+      <!-- <t-hamburger v-if="showHamburger" @clicked="onHamburgerClicked"/> -->
+      <button @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
+        <t-icon :icon="{ icon: 'hamburger', color: color }" :width="24" :height="24" />
+      </button>
+
       <transition name="roll-down">
         <ul v-if="showMenu" class="hamburger-ul">
           <li v-for="link in links" :key="link.label">
@@ -21,7 +25,8 @@
 </template>
 <script>
 
-import THamburger from './THamburger.vue'
+// import THamburger from './THamburger.vue'
+import TIcon from './TIcon.vue'
 
 export default {
 
@@ -35,7 +40,8 @@ export default {
   data () {
     return {
       showHamburger: false,
-      showMenu: false
+      showMenu: false,
+      color: '#6fffe9'
     }
   },
   created () {
@@ -50,9 +56,15 @@ export default {
     },
     onClick () {
       this.showMenu = false
+    },
+    onMouseEnter () {
+      this.color = '#FF70AE'
+    },
+    onMouseLeave () {
+      this.color = '#6fffe9'
     }
   },
-  components: { THamburger }
+  components: { TIcon }
 }
 
 </script>
@@ -108,5 +120,10 @@ nav.nav > ul li span
 .roll-down-enter-active, .roll-down-leave-active
   transition: transform .3s linear
   transform-origin: top
+
+nav > button
+  background: transparent
+  border: none
+  cursor: pointer
 
 </style>
