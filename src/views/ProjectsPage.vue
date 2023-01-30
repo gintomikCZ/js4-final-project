@@ -42,6 +42,7 @@
 // import { getProjects, getTasks } from '../data/data.js'
 import db from '../helpers/db.js'
 import { formatDate, isPast } from '../helpers/dateFunctions.js'
+import { sortingTasks  } from '@/helpers/sorting.js'
 import TAccordeon from '../components/TAccordeon.vue'
 import TList from '../components/TList.vue'
 import TButton from '../components/TButton.vue'
@@ -60,9 +61,8 @@ export default {
     }
   },
   computed: {
-    projectsToDisplay () { // [ {id: 1, project: 'zahrada', tasks: [{task1 ....}]}]
+    projectsToDisplay () {
       return this.projects.map(project => {
-
         return Object.assign(
           {
             tasks: this.tasks.filter(task => project.id === task.projectid).map(item => {
@@ -77,13 +77,15 @@ export default {
                 header: item.task,
                 subtitle: formatDate(item.date),
                 icon,
-                completed: item.completed
+                completed: item.completed,
+                task: item.task,
+                date: item.date
               }
-            })
+            }).sort(sortingTasks)
           },
           project
         )
-      })
+      }).sort((a, b) => a.project.localeCompare(b.project))
     }
   },
   created () {

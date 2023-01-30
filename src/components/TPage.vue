@@ -13,6 +13,9 @@
 
     <div v-else>
       <slot name="content"></slot>
+      <div v-if="displayBackButton" class="back-button-container">
+        <t-button label="back" @click="$router.go(-1)" />
+      </div>
     </div>
 
   </div>
@@ -30,7 +33,11 @@ export default {
     addButtonLabel: String,
     addButtonRedirect: String,
     img: String,
-    loading: Boolean
+    loading: Boolean,
+    displayBackButton: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     getImgUrl (pic) {

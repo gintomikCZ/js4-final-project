@@ -6,6 +6,7 @@
     <template v-slot:content>
       <div class="top-buttons">
         <t-button label="edit" @clicked="onEditButtonClicked" />
+        <t-button label="add task" @clicked="onAddTaskClicked" />
         <t-button v-if="!tasks.length" label="delete" @clicked="onDeleteButtonClicked" />
       </div>
       <div>
@@ -50,6 +51,7 @@
 <script>
 import db from '@/helpers/db.js'
 import { isPast, formatDate } from '@/helpers/dateFunctions.js'
+import { sortingTasks } from '@/helpers/sorting.js'
 import TPage from '@/components/TPage.vue'
 import TButton from '@/components/TButton.vue'
 import TModal from '@/components/TModal.vue'
@@ -69,7 +71,7 @@ export default {
         type: 'select',
         options: []
       },
-      taskToAdd: null
+      taskidToAdd: null
     }
   },
   computed: {
@@ -80,22 +82,25 @@ export default {
       return this.tasks.map(task => {
         let icon = ''
         let color = ''
-        const buttons = ['remove', 'edit', task.completed ? 'undone' : 'done']
+        const buttons = [task.completed ? 'undone' : 'done', 'remove', 'edit']
         if (task.completed) {
           icon = 'check',
-            color = 'green'
+          color = 'green'
         } else if (isPast(task.date)) {
           icon = 'warning',
-            color = 'red'
+          color = 'red'
         }
         return {
           id: task.taskid,
           header: task.task,
           subtitle: formatDate(task.date),
           icon: { icon, color },
-          buttons
+          buttons,
+          date: task.date,
+          task: task.task,
+          completed: task.completed
         }
-      })
+      }).sort(sortingTasks)
     }
   },
   created () {
@@ -144,22 +149,42 @@ export default {
         const completed = payload.button === 'done' ? 1 : 0
         db.put('js4tasks', { id: payload.item.id, completed }).then(() => {
           db.get('js4tasks/' + payload.item.id).then((record) => {
-            this.tasks.find(task => task.id === payload.item.id).completed = record.completed
+            this.tasks.find(task => task.taskid === payload.item.id).completed = record.completed
           })
         })
       }
     },
     onAddTaskClicked () {
-      //TODO: onAddTaskClicked
+      db.get('js4tasks').then((allTasks) => {
+        const tasksFiltered = allTasks.filter(taskFromAll => {
+          return !this.tasks.some(item => {
+            return '' + item.taskid === '' + taskFromAll.id
+          })
+        })
+        this.addTaskSettings.options = tasksFiltered.map(task => {
+          return {
+            value: task.id,
+            label: task.task + ' (' + task.project + ')'
+          }
+        })
+        this.addTaskSettings.options.unshift({ value: '', label: '' })
+      }).then(() => {
+        this.taskidToAdd = null
+        this.showAddTaskModal = true
+      })
     },
     closeAddTaskModal () {
       this.showAddTaskModal = false
     },
     onAddTaskChanged (payload) {
-      this.taskToAdd = payload.value
+      this.taskidToAdd = payload.value
     },
     addTask () {
-      //TODO: AddTask
+      db.post('js4personstasks', { personid: this.personid, taskid: this.taskidToAdd }).then(() => {
+        this.fetchTasks().then(() => {
+          this.closeAddTaskModal()
+        })
+      })
     }
   },
   components: { TPage, TButton, TModal, TList, TInput }

@@ -89,7 +89,7 @@ export default {
           icon: { icon: '', color: ''},
           buttons: ['remove', 'edit']
         }
-      })
+      }).sort((a, b) => a.header.localeCompare(b.header))
     }
   },
   created () {

@@ -43,6 +43,7 @@
 
 import db from '../helpers/db.js'
 import { formatDate, isPast } from '../helpers/dateFunctions.js'
+import { sortingTasks } from '@/helpers/sorting.js'
 import TButton from '../components/TButton.vue'
 import TAccordeon from '../components/TAccordeon.vue'
 import TList from '../components/TList.vue'
@@ -83,11 +84,14 @@ export default {
               id: task.id,
               header: task.task,
               subtitle: task.project + ', ' + formatDate(task.date),
-              icon: { icon, color }
+              icon: { icon, color },
+              task: task.task,
+              completed: task.completed,
+              date: task.date
             }
-          })
+          }).sort(sortingTasks)
         }
-      })
+      }).sort((a, b) => a.fullName.localeCompare(b.fullName))
     }
   },
   created () {

@@ -2,6 +2,7 @@
   <t-page
     :title="title"
     :loading="loading"
+    displayBackButton
   >
     <template v-slot:content>
       <t-form

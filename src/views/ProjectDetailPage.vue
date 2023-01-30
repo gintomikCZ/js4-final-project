@@ -39,6 +39,7 @@
 
 import db from '../helpers/db.js'
 import { formatDate, isPast } from '../helpers/dateFunctions.js'
+import { sortingTasks } from '@/helpers/sorting.js'
 import TPage from '../components/TPage.vue'
 import TList from '../components/TList.vue'
 import TButton from '../components/TButton.vue'
@@ -62,7 +63,7 @@ export default {
       return this.tasks.map(task => {
         let icon = ''
         let color = ''
-        const buttons = ['edit', task.completed ? 'undone' : 'done']
+        const buttons = [task.completed ? 'undone' : 'done', 'edit']
         if (task.completed) {
           icon = 'check',
           color = 'green'
@@ -75,9 +76,12 @@ export default {
           header: task.task,
           subtitle: formatDate(task.date),
           icon: { icon, color },
-          buttons
+          buttons,
+          task: task.task,
+          completed: task.completed,
+          date: task.date
         }
-      })
+      }).sort(sortingTasks)
     }
   },
   created () {

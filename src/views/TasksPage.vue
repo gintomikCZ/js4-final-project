@@ -7,11 +7,18 @@
     img="tasks.png"
   >
     <template v-slot:content>
-      <t-accordeon v-for="task in tasksToDisplay" :key="task.id" :title="task.task + ' (' + task.project + ')'">
+      <t-accordeon
+        v-for="task in tasksToDisplay"
+        :key="task.id"
+        :title="task.task + ' (' + task.project + ')'"
+      >
         <template v-slot:content>
           <div class="task-info-row">
             <div class="task-icon">
               <t-icon :icon="task.icon" />
+            </div>
+            <div class="task-date">
+              {{ formatDate(task.date) }}
             </div>
             <div class="page-btn-container tasks-btn-container">
               <t-button label="detail" small-size @clicked="$router.push('/task/' + task.id)" />
@@ -37,7 +44,8 @@
 <script>
 
 import db from '../helpers/db.js'
-import { isPast } from '../helpers/dateFunctions.js'
+import { isPast, formatDate } from '../helpers/dateFunctions.js'
+import { sortingTasks } from '@/helpers/sorting.js'
 import TAccordeon from '../components/TAccordeon.vue'
 import TButton from '../components/TButton.vue'
 import TList from '../components/TList.vue'
@@ -51,13 +59,6 @@ export default {
     return {
       loading: true,
       tasks: [],
-      /* { id: 1, task: '....', completed: 0, priority: 1, date: '2022-12-29', project: 'zahrada' }
-        přiřadíme k němu ikonu:
-        icon: { icon: '', color: '' }
-        persons: [
-          { fullName: 'karel Houska', position: 'manager' }
-        ]
-      */
       persons: [],
       showDeleteModal: false,
       taskToDelete: {}
@@ -75,15 +76,18 @@ export default {
           icon = 'warning'
           color = 'red'
         }
-        const persons = this.persons.filter(person => task.id === person.taskid).map(person => {
-          return {
-            id: person.id,
-            header: person.last + ' ' + person.first,
-            subtitle: person.position
-          }
-        })
+        const persons = this.persons
+          .filter(person => task.id === person.taskid)
+          .map(person => {
+            return {
+              id: person.id,
+              header: person.last + ' ' + person.first,
+              subtitle: person.position
+            }
+          })
+          .sort((a, b) => a.header.localeCompare(b.header))
         return Object.assign(task, { icon: { icon, color } }, { persons })
-      })
+      }).sort(sortingTasks)
     }
   },
   created () {
@@ -111,6 +115,9 @@ export default {
         this.showDeleteModal = false
         this.fetchData()
       })
+    },
+    formatDate (date) {
+      return formatDate(date)
     }
   },
   components: { TAccordeon, TButton, TList, TPage, TIcon, TModal }

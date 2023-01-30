@@ -48,4 +48,7 @@ body
   border-bottom: 1px solid #efefef
   gap: $flex-gap
 
+.back-button-container
+  margin: $margin 0
+
 </style>

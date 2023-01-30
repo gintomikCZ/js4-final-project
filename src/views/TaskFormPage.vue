@@ -2,6 +2,7 @@
   <t-page
     :title="title"
     :loading="loading"
+    displayBackButton
   >
     <template v-slot:content>
       <t-form :settings="settings" v-if="!loading" @submited="onSubmited" />

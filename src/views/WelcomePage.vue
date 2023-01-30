@@ -49,7 +49,8 @@ export default {
     return {
       projects: [],
       tasks: [],
-      persons: []
+      persons: [],
+      loading: true
     }
   },
   computed: {
@@ -69,8 +70,6 @@ export default {
       return this.numberOfTasks - this.numberOfCompleted
     },
     numberOfOverDue () {
-      // chceme vybrat všechny tasky, které jsou unpomleted a zároveň jejich datum je PAST
-      // return this.tasks.filter(task => !task.completed && isPast(task.date)).length
       return this.tasks.reduce((acc, cur) => {
         return acc + !cur.completed && isPast(cur.date) ? 1 : 0
       })
