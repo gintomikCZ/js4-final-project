@@ -79,28 +79,28 @@ export default {
       return this.$route.params.id
     },
     tasksToDisplay () {
-      return this.tasks.map(task => {
-        let icon = ''
-        let color = ''
-        const buttons = [task.completed ? 'undone' : 'done', 'remove', 'edit']
-        if (task.completed) {
-          icon = 'check',
-          color = 'green'
-        } else if (isPast(task.date)) {
-          icon = 'warning',
-          color = 'red'
-        }
-        return {
-          id: task.taskid,
-          header: task.task,
-          subtitle: formatDate(task.date),
-          icon: { icon, color },
-          buttons,
-          date: task.date,
-          task: task.task,
-          completed: task.completed
-        }
-      }).sort(sortingTasks)
+      return this.tasks
+        .slice()
+        .sort(sortingTasks)
+        .map(task => {
+          let icon = ''
+          let color = ''
+          const buttons = [task.completed ? 'undone' : 'done', 'remove', 'edit']
+          if (task.completed) {
+            icon = 'check',
+            color = 'green'
+          } else if (isPast(task.date)) {
+            icon = 'warning',
+            color = 'red'
+          }
+          return {
+            id: task.taskid,
+            header: task.task,
+            subtitle: formatDate(task.date),
+            icon: { icon, color },
+            buttons
+          }
+        })
     }
   },
   created () {
