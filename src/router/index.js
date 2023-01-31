@@ -46,8 +46,6 @@ const routes = [
     name: 'projectFormEdit',
     component: () => import('../views/ProjectFormPage.vue')
   },
-
-
   {
     path: '/task-form',
     name: 'taskFormAdd',
@@ -75,6 +73,11 @@ const routes = [
     path: '/person-form/:id',
     name: 'personFormEdit',
     component: () => import('../views/PersonFormPage.vue')
+  },
+  {
+    path: '/error',
+    name: 'error',
+    component: () => import('../views/ErrorPage.vue')
   }
 ]
 

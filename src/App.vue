@@ -1,11 +1,13 @@
 <template>
   <t-nav-bar :links="navbarLinks" />
-  <router-view/>
+  <error-page v-if="error" />
+  <router-view v-else/>
 
 </template>
 
 <script>
 import TNavBar from './components/TNavBar.vue'
+import ErrorPage from './views/ErrorPage.vue'
 
 export default {
   name: 'App',
@@ -19,7 +21,18 @@ export default {
       ]
     }
   },
-  components: { TNavBar }
+  computed: {
+    error () {
+      return this.$store.state.error
+    }
+  },
+  mounted () {
+    window.addEventListener('error', () => {
+      this.$store.commit('setErrorMessage', 'jejda, něco se pokazilo')
+      this.$store.commit('setError', true)
+    })
+  },
+  components: { TNavBar, ErrorPage }
 }
 
 </script>
@@ -51,4 +64,6 @@ body
 .back-button-container
   margin: $margin 0
 
+.no-data-message
+  padding-bottom: 1rem
 </style>

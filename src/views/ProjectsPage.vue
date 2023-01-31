@@ -7,18 +7,24 @@
     img="projects.png"
   >
     <template v-slot:content>
-      <t-accordeon v-for="project in projectsToDisplay" :key="project.id"
-        :title="project.project + ' (' + project.tasks.filter(task => task.completed).length + '/' + project.tasks.length + ')'">
-        <template v-slot:content>
-          <div class="page-btn-container">
-            <t-button label="detail" small-size @clicked="$router.push('/project/' + project.id)" />
-            <t-button label="edit" small-size @clicked="$router.push('/project-form/' + project.id)" />
-            <t-button v-if="!project.tasks.length" label="delete" small-size @clicked="onDeleteClicked(project)" />
-            <t-button label="add task" small-size @clicked="$router.push('/task-form-project/' + project.id)" />
-          </div>
-          <t-list :items="project.tasks" display-icons />
-        </template>
-      </t-accordeon>
+
+      <p v-if="!projects.length">there are no projects in the database yet</p>
+      <template v-else>
+        <t-accordeon v-for="project in projectsToDisplay" :key="project.id"
+          :title="project.project + ' (' + project.tasks.filter(task => task.completed).length + '/' + project.tasks.length + ')'">
+          <template v-slot:content>
+            <div class="page-btn-container">
+              <t-button label="detail" small-size @clicked="$router.push('/project/' + project.id)" />
+              <t-button label="edit" small-size @clicked="$router.push('/project-form/' + project.id)" />
+              <t-button v-if="!project.tasks.length" label="delete" small-size @clicked="onDeleteClicked(project)" />
+              <t-button label="add task" small-size @clicked="$router.push('/task-form-project/' + project.id)" />
+            </div>
+            <p v-if="!project.tasks.length" class="no-data-message">there are no tasks in the project</p>
+            <t-list v-else :items="project.tasks" display-icons />
+          </template>
+        </t-accordeon>
+      </template>
+
     </template>
   </t-page>
   <t-modal

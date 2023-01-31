@@ -21,6 +21,7 @@
           <t-list :items="person.tasks" display-icons />
         </template>
       </t-accordeon>
+      <!-- <t-button label="generate error" @click="errorBtn" /> -->
     </template>
   </t-page>
   <t-modal
@@ -120,7 +121,11 @@ export default {
         this.closeDeleteModal()
         this.fetchData()
       })
-    }
+    },
+    // errorBtn () {
+    //   const obj = null
+    //   console.log(obj.property)
+    // }
   },
   components: { TButton, TList, TAccordeon, TPage, TModal }
 }

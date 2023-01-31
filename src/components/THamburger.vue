@@ -8,10 +8,6 @@
 
 </template>
 
-
-
-
-
 <script>
 export default {
   name: 'THamburger',

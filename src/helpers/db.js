@@ -2,11 +2,12 @@ import axios from 'axios'
 axios.defaults.baseURL = 'https://sdaapi.glabazna.eu'
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 axios.defaults.headers.common.Accept = 'json'
+// import router from '../router/index.js'
+import store from '../store/index.js'
 
 const checkUrl = (url) => {
   return url.substr(0, 1) === '/' ? url : '/' + url
 }
-
 
 export default {
   get (path) {
@@ -15,6 +16,10 @@ export default {
       url: checkUrl(path),
     }).then((response) => {
       return response.data.data
+    }).catch(() => {
+      store.commit('setErrorMessage', 'Chyba při načítání dat.')
+      store.commit('setError', true)
+      // router.push('/error')
     })
   },
 
@@ -25,6 +30,11 @@ export default {
       data: body
     }).then((response) => {
       return response.data.data
+    }).catch(() => {
+      store.commit('setErrorMessage', 'Chyba při ukládání dat do databáze.')
+      // router.push('/error')
+      store.commit('setError', true)
+
     })
   },
   put (path, body) {
@@ -34,6 +44,11 @@ export default {
       data: body
     }).then((response) => {
       return response.data.data
+    }).catch(() => {
+      store.commit('setErrorMessage', 'Chyba při editaci dat.')
+      // router.push('/error')
+      store.commit('setError', true)
+
     })
   },
   delete (path, body) {
@@ -43,6 +58,11 @@ export default {
       data: body
     }).then((response) => {
       return response.data.data
+    }).catch(() => {
+      store.commit('setErrorMessage', 'Chyba při mazání záznamu.')
+      // router.push('/error')
+      store.commit('setError', true)
+
     })
   }
 }

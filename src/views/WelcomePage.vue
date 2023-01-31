@@ -62,9 +62,6 @@ export default {
     },
     numberOfCompleted () {
       return this.tasks.filter(task => task.completed).length
-      // return this.tasks.reduce((acc, cur) => {
-      //   return acc + cur.completed
-      // }, 0)
     },
     numberOfUncompleted () {
       return this.numberOfTasks - this.numberOfCompleted
