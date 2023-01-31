@@ -118,15 +118,16 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+@import '../../styles/variables.styl'
 
 form
   width: 60%
   max-width: 400px
   margin: 0 auto
-  border-radius: 10px
+  border-radius: $border-radius
   box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2)
   padding-bottom: 2rem
 
   .submit-button
-    margin-top: 2rem
+    margin-top: $margin
 </style>

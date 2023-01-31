@@ -100,6 +100,7 @@ export default {
 
 <style lang="stylus" scoped>
 @import '../../styles/variables.styl'
+@import '../../styles/transitions.styl'
 .form-control
   display: flex
   flex-direction: column
@@ -113,7 +114,7 @@ export default {
     border-style: none
     outline: 1px solid #cdcdcd
     background: #efefef
-    border-radius: 10px
+    border-radius: $border-radius
     padding: .4em .8em
     font-size: 1.2rem
     transition: all .3s linear
@@ -122,22 +123,14 @@ export default {
     &:focus
       outline: 2px solid #FF70AE
       background: #efefef
-      border-radius: 10px
+      border-radius: $border-radius
 .error-message
   color: red
   text-align: left
   position: absolute
   top: calc(100% - .9rem)
   line-height: 1
-.slide-right-enter-from, .slide-right-leave-to
-  transform: translateX(-1rem)
-  opacity: 0
-.slide-right-enter-to, .slide-right-leave-from
-  transform: translateX(0)
-  opacity: 1
-.slide-right-enter-active, .slide-right-leave-active
-  transition: all .3s ease
-  transform-origin: left
+
 .radio-option input:checked + label
   transition: background .3s ease
   background: lighten($secondary, 50%)

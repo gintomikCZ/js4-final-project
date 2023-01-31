@@ -1,8 +1,11 @@
 <template>
   <t-nav-bar :links="navbarLinks" />
   <error-page v-if="error" />
-  <router-view v-else/>
-
+  <template v-else>
+    <!-- <transition name="fadeout"> -->
+      <router-view />
+    <!-- </transition> -->
+  </template>
 </template>
 
 <script>
@@ -66,4 +69,11 @@ body
 
 .no-data-message
   padding-bottom: 1rem
+
+// .fadeout-enter-from, .fadeout-leave-to
+//   opacity: 0
+// .fadeout-enter-to, .fadeout-leave-from
+//   opacity: 1
+// .fadeout-enter-active, .fadeout-leave-active
+//   transition: opacity .2s ease
 </style>

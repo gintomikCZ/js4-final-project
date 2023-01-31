@@ -1,0 +1,131 @@
+1) návrh databázové struktury
+  - relace db tabulek
+    1:N (persons - positions, tasks - projects)
+    N:M (persons - tasks) - spojovací tabulky
+  - vlastní a cizí klíče
+  - závislost záznamů a povolení mazání (sirotčí záznamy !!!)
+    (positions - speciální tabulka)
+  - sloupce tabulek - rozhodnout správně o datových typech
+    (completed - integer 0 nebo 1)
+    (priority - integer 1 2 3)
+  - omezení hodnot ve sloupcích
+
+  => briefing s BE => příprava databáze
+
+  free databaze - firebase
+  umělé datové soubory - vytvořit si asynchornní funkce pro získávání nebo editaci dat
+  vuex store - actions
+
+2) UX - seznam views (stránek)
+  např. stránka positions nemá smysl
+
+  views:
+    seznamy (zobrazují hromadné množství záznamů)
+    detaily (zobrazují jeden záznam) - ještě zobrazují relační záznamy
+    formuláře (add, edit režim)
+
+3) routing
+  základní navigační UI (navbar)
+  buttonky
+  historie prohlížeče - forward/back
+
+4) formuláře
+  rozlišit cestu k formuláři pro edit a pro add
+  formuláře v add režimu s předvyplněnými některými údaji (nový task v rámci projektu)
+
+___________________________________________
+
+5) základní UI komponenty
+  stylování - dělat obecně, vyčleňovat hodnoty do variables, ať je to udržovatelné a znovupoužitelné
+  buttonky
+  listy (seznamy)
+  tabulky
+  akordeony
+  modálová okna
+  alerty
+  ikony (svg) - material icons, font awesome
+    - kódovat jako znovupoužitelné komponenty
+
+6) vytvořit views jako prázdné stránky
+  h1
+  TODO tree
+
+7) nápady na vyšší level abstrakce - určitě realizovat
+
+8) plnit stránky daty
+  - edge cases
+    - nejsou žádná data
+    - dat je příliš mnoho (!) - pagination, filtrování, atd.
+    - edge cases můžou nastat i v relačních záznamech
+  - responsivita
+
+9) formuláře a UI ve formech
+  inputy různých typů
+    date - datepickery
+    time - timepickery
+    select
+    number
+  validace (kdy validovat - po každém inputu? nebo po bluru? nebo po change?)
+    zobrazování error messages
+    zobrazování help messages
+    placeholders // nezaměňovat s obsahem
+    jasná identifikace fokusu - nahradili jsme tradiční modrý outline (!!!)
+    rozlišení disabled polí
+
+  odeslání formuláře - umožnímo ho při nevalidním formu - submit button třeba někdy není dokud form není validní,
+    nebo se zobrazí jako disabled
+    validace frontend, validace na serveru - konzistentní
+    vztahové validace
+    jak zobrazit error message
+    jak z toho formuláře odejít (!) a kam - success messages
+
+10) jak a která data načítat
+  personstasks:
+    id
+    taskid
+    personid
+    persons.first, persons.last, persons.positionid, positions.position
+    tasks.task, tasks.completed, tasks.date, tasks.priority, tasks.projectid, projects.project
+  taskDetailPage - nepotřebujeme některá data
+
+11) práce s obrázky - upravovat velikost obrázků <img width="100" />
+12) pozor na vzdálené zdroje ... img src, link href .... script src
+
+13) testovat UX
+  - testy ?? E2E, UnitTests
+
+14) debugging - console.logs - uklízet po sobě
+  testing na větším objemu dat
+
+15) odstraňovat event listenery na window nebo na document - závěrečné lifecycle hooks
+
+16) rozlišovat scopované a globální styly
+  UI komponenty - scoped
+  globální styly - App.vue / global.styl
+
+17) transitions - do zvláštních souborů
+
+
+
+db data
+
+nezobrazovat id's uživatelům (!)
+někdy se zamotají id s id's relačních tabulek
+
+[
+  { id: 11, column: value ........},
+  ....
+]
+
+map, sort, reduce, filter, find, findIndex, every, some - co ta funce vrací, co musí vracet callback, sideefekt (?)
+
+
+
+
+
+
+
+
+
+
+
